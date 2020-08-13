@@ -5,10 +5,10 @@
     <hr>
     <div class="row">
         <div class="col-md-5">
-            <app-payment-detail></app-payment-detail>
+            <app-payment-detail [data]="paymentDetail"></app-payment-detail>
         </div>
         <div class="col-md-5">
-            <app-payment-detail-list></app-payment-detail-list>
+            <app-payment-detail-list (messageEvent)="getPaymentEdit($event)"></app-payment-detail-list>
         </div>
     </div>
 </div>

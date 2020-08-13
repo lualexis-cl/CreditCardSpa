@@ -1,13 +1,75 @@
-<form #form="ngForm" autocomplete="off">
+<form [formGroup]="form" #formCreateCreditCard="ngForm" (ngSubmit)="saveCreditCard()"  autocomplete="off">
+  <input type="hidden" name="PMId" formControlName="PMId">
+  <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text bg-white">
+                    <i [class.green-icon]="f.CardOwnerName.valid" [class.red-icon]="f.CardOwnerName.invalid && f.CardOwnerName.touched" class="fas fa-user-circle">
+                    </i>
+                </div>
+            </div>
+            <input name="CardOwnerName" formControlName="CardOwnerName"  class="form-control" placeholder="Card Owner Name" required>
+        </div>
+        <div *ngIf="f.CardOwnerName.dirty && f.CardOwnerName.invalid" class="alert alert-danger">
+          <div *ngIf="f.CardOwnerName.errors.required">
+            This field is required
+          </div>
+        </div>
+    </div>
     <div class="form-group">
         <div class="input-group">
             <div class="input-group-prepend">
                 <div class="input-group-text bg-white">
-                    <i class="fas fa-user-circle">
+                    <i [class.green-icon]="f.CardNumber.valid" [class.red-icon]="f.CardNumber.invalid && f.CardNumber.touched" class="fas fa-credit-card">
                     </i>
                 </div>
             </div>
-            <input name="CardOwnerName" class="form-control" placeholder="Card Owner Name">
+            <input name="CardNumber" formControlName="CardNumber" class="form-control" placeholder="16 Card Number" required maxlength="16" minlength="16">
         </div>
+        <div *ngIf="f.CardNumber.dirty && f.CardNumber.invalid" class="alert alert-danger">
+          <div *ngIf="f.CardNumber.errors.required">
+            This field is required
+          </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-7">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text bg-white">
+                        <i [class.green-icon]="f.ExpirationDate.valid" [class.red-icon]="f.ExpirationDate.invalid && f.ExpirationDate.touched" class="fas fa-calendar-alt">
+                        </i>
+                    </div>
+                </div>
+                <input name="ExpirationDate" formControlName="ExpirationDate" class="form-control" placeholder="MM/YY" required minlength="5" maxlength="5">
+            </div>
+            <div *ngIf="f.ExpirationDate.dirty && f.ExpirationDate.invalid" class="alert alert-danger">
+              <div *ngIf="f.ExpirationDate.errors.required">
+                This field is required
+              </div>
+            </div>
+        </div>
+        <div class="form-group col-md-5">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text bg-white">
+                        <i [class.green-icon]="f.CVV.valid" [class.red-icon]="f.CVV.invalid && f.CVV.touched" class="fas fa-key">
+                        </i>
+                    </div>
+                </div>
+                <input type="password" formControlName="CVV" name="CVV" class="form-control" placeholder="CCV" required minlength="3" maxlength="3">
+            </div>
+            <div *ngIf="f.CVV.dirty && f.CVV.invalid" class="alert alert-danger">
+              <div *ngIf="f.CVV.errors.required">
+                This field is required
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button [disabled]="formCreateCreditCard.invalid" class="btn btn-success btn-lg btn-block" type="submit">
+            <i class="fas fa-database"></i>
+            Submit
+        </button>
     </div>
 </form>
