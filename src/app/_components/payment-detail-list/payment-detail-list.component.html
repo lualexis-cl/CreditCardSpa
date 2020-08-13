@@ -1,5 +1,5 @@
 <table class="table table-hover">
-  <tr *ngFor="let paymentDetail of this.paymentList" >
+  <tr *ngFor="let paymentDetail of this.service.paymentList" >
     <td (click)="populatePayment(paymentDetail)" >
       {{ paymentDetail.CardOwnerName }}
     </td>
@@ -8,6 +8,9 @@
     </td>
     <td (click)="populatePayment(paymentDetail)">
       {{ paymentDetail.ExpirationDate }}
+    </td>
+    <td>
+      <i class="far fa-trash-alt fa-lg text-danger" (click)="deletePayment(paymentDetail.PMId)" ></i>
     </td>
   </tr>
 </table>

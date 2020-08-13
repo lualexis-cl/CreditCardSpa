@@ -2,6 +2,7 @@ import { PaymentDetail } from './../../../_models/payment-detail';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PaymentDetailService } from 'src/app/_services/payment-detail.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-payment-detail',
@@ -11,7 +12,8 @@ import { PaymentDetailService } from 'src/app/_services/payment-detail.service';
 export class PaymentDetailComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private paymentDetailService: PaymentDetailService) { }
+  constructor(private paymentDetailService: PaymentDetailService,
+              private toastService: ToastrService) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -41,12 +43,15 @@ export class PaymentDetailComponent implements OnInit {
       });
     }
   }
+
   saveCreditCard(): void {
     console.log('submit');
     if (this.form.valid) {
       const payment = this.form.value as PaymentDetail;
       if (payment.PMId === 0) {
         this.createCreditCard(payment);
+      } else {
+        this.updateCreditCard(payment);
       }
     }
   }
@@ -55,12 +60,25 @@ export class PaymentDetailComponent implements OnInit {
     this.paymentDetailService.postPaymentDetail(payment)
         .subscribe(
           response => {
+            this.toastService.success('Credit Card Created Successfully');
             this.form.reset();
+            this.paymentDetailService.getList();
             console.log(response);
-          },
-          err => {
+          }, err => {
+            this.toastService.error('Something wrong!');
             console.log(err);
           }
         );
+  }
+
+  updateCreditCard(payment: PaymentDetail): void {
+    this.paymentDetailService.putPaymentDetail(payment)
+      .subscribe(response => {
+        this.form.reset();
+        this.paymentDetailService.getList();
+      },
+        err => {
+          console.log(err);
+        });
   }
 }

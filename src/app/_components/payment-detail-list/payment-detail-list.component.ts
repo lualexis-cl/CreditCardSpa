@@ -1,6 +1,7 @@
 import { PaymentDetail } from './../../_models/payment-detail';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { PaymentDetailService } from 'src/app/_services/payment-detail.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-payment-detail-list',
@@ -8,26 +9,33 @@ import { PaymentDetailService } from 'src/app/_services/payment-detail.service';
   styleUrls: ['./payment-detail-list.component.css']
 })
 export class PaymentDetailListComponent implements OnInit {
-  paymentList: PaymentDetail[];
+
   paymentEdit: PaymentDetail;
   @Output() messageEvent = new EventEmitter<PaymentDetail>();
 
-  constructor(private service: PaymentDetailService) { }
+  constructor(public service: PaymentDetailService,
+              private toast: ToastrService) { }
 
   ngOnInit(): void {
     this.getPaymentList();
   }
 
   getPaymentList(): void {
-    this.service.getPaymentList()
-      .toPromise()
-      .then(res => {
-          this.paymentList = res as PaymentDetail[];
-          console.log(this.paymentList);
-        });
+    this.service.getList();
   }
 
   populatePayment(paymentDetail: PaymentDetail): void {
     this.messageEvent.emit(paymentDetail);
+  }
+
+  deletePayment(id: number): void {
+    this.service.deletePayment(id)
+      .subscribe(response => {
+        this.toast.success('Record deleted successfully');
+        this.service.getList();
+      }, err => {
+        this.toast.error('Something wrong!');
+        console.log(err);
+      });
   }
 }
